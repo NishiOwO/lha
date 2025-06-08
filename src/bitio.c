@@ -54,7 +54,7 @@ putcode(n, x)           /* Write leftmost n bits of x */
 {
     while (n >= bitcount) {
         n -= bitcount;
-        subbitbuf += x >> (USHRT_BIT - bitcount);
+        subbitbuf += (unsigned short)x >> (USHRT_BIT - bitcount);
         x <<= bitcount;
         if (compsize < origsize) {
             if (fwrite(&subbitbuf, 1, 1, outfile) == 0) {
@@ -67,7 +67,7 @@ putcode(n, x)           /* Write leftmost n bits of x */
         subbitbuf = 0;
         bitcount = CHAR_BIT;
     }
-    subbitbuf += x >> (USHRT_BIT - bitcount);
+    subbitbuf += (unsigned short)x >> (USHRT_BIT - bitcount);
     bitcount -= n;
 }
 
@@ -76,7 +76,7 @@ putbits(n, x)           /* Write rightmost n bits of x */
     int   n;
     int   x;
 {
-    x <<= USHRT_BIT - n;
+    x <<= USHRT_BIT - (unsigned short)n;
     putcode(n, x);
 }
 
