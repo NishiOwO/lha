@@ -19,6 +19,7 @@
 #include <sys/stat.h>
 #include <signal.h>
 
+#include <inttypes.h>
 #include <stdint.h>
 
 #include <string.h>
