@@ -10,9 +10,9 @@
 
 void
 make_table(nchar, bitlen, tablebits, table)
-    short           nchar;
+    int             nchar;
     unsigned char   bitlen[];
-    short           tablebits;
+    int             tablebits;
     unsigned short  table[];
 {
     unsigned short  count[17];  /* count of bitlen */

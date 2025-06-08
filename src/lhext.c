@@ -156,7 +156,7 @@ make_parent_path(name)
     if (verbose)
         message("Making directory \"%s\".", path);
 
-#if defined __MINGW32__
+#if !defined(__unix__)
     if (mkdir(path) >= 0)
         return TRUE;
 #else
@@ -167,7 +167,7 @@ make_parent_path(name)
     if (!make_parent_path(path))
         return FALSE;
 
-#if defined __MINGW32__
+#if !defined(__unix__)
     if (mkdir(path) < 0) {      /* try again */
         error("Cannot make directory \"%s\"", path);
         return FALSE;
@@ -205,11 +205,13 @@ symlink_with_make_path(realname, name)
 {
     int l_code;
 
+#ifndef __WATCOMC__
     l_code = symlink(realname, name);
     if (l_code < 0) {
         make_parent_path(name);
         l_code = symlink(realname, name);
     }
+#endif
 
     return l_code;
 }
@@ -247,6 +249,7 @@ adjust_info(name, hdr)
             chmod(name, hdr->unix_mode);
         }
 
+#ifdef __unix__
         if (!getuid()){
             uid_t uid = hdr->unix_uid;
             gid_t gid = hdr->unix_gid;
@@ -269,6 +272,7 @@ adjust_info(name, hdr)
 #endif /* HAVE_LCHWON */
                 chown(name, uid, gid);
         }
+#endif
     }
 #if __CYGWIN__
     else {
@@ -452,9 +456,9 @@ extract_one(afp, hdr)
                 return read_size;
             }
 
-            signal(SIGINT, interrupt);
+            signal(SIGINT, lha_interrupt);
 #ifdef SIGHUP
-            signal(SIGHUP, interrupt);
+            signal(SIGHUP, lha_interrupt);
 #endif
 
             unlink(name);

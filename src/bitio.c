@@ -13,14 +13,15 @@ static unsigned char subbitbuf, bitcount;
 
 void
 fillbuf(n)          /* Shift bitbuf n bits left, read n bits */
-    unsigned char   n;
+    int   n;
 {
     while (n > bitcount) {
         n -= bitcount;
         bitbuf = (bitbuf << bitcount) + (subbitbuf >> (CHAR_BIT - bitcount));
         if (compsize != 0) {
+            int c;
             compsize--;
-            int c = getc(infile);
+            c = getc(infile);
             if (c == EOF) {
                 fatal_error("cannot read stream");
             }
@@ -37,7 +38,7 @@ fillbuf(n)          /* Shift bitbuf n bits left, read n bits */
 
 unsigned short
 getbits(n)
-    unsigned char   n;
+    int   n;
 {
     unsigned short  x;
 
@@ -48,8 +49,8 @@ getbits(n)
 
 void
 putcode(n, x)           /* Write leftmost n bits of x */
-    unsigned char   n;
-    unsigned short  x;
+    int   n;
+    int   x;
 {
     while (n >= bitcount) {
         n -= bitcount;
@@ -72,8 +73,8 @@ putcode(n, x)           /* Write leftmost n bits of x */
 
 void
 putbits(n, x)           /* Write rightmost n bits of x */
-    unsigned char   n;
-    unsigned short  x;
+    int   n;
+    int   x;
 {
     x <<= USHRT_BIT - n;
     putcode(n, x);

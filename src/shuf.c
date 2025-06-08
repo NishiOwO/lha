@@ -35,7 +35,7 @@ decode_start_st0( /*void*/ )
 /* ------------------------------------------------------------------------ */
 void
 encode_p_st0(j)
-    unsigned short  j;
+    int  j;
 {
     unsigned short  i;
 

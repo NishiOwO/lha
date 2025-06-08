@@ -72,7 +72,7 @@ void warning(char *fmt, ...);
 void error(char *fmt, ...);
 void fatal_error(char *fmt, ...);
 void cleanup(void);
-RETSIGTYPE interrupt(int signo);
+RETSIGTYPE lha_interrupt(int signo);
 void *xmalloc(size_t size);
 void *xrealloc(void *old, size_t size);
 char *xstrdup(char *str);

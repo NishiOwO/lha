@@ -83,8 +83,13 @@ add_one(fp, nafp, hdr)
                       &v_original_size, &v_packed_size);
         fflush(nafp);
         next_pos = ftello(nafp);
+#ifdef __unix__
         if (ftruncate(fileno(nafp), next_pos) == -1)
             error("cannot truncate archive");
+#else
+        if (chsize(fileno(nafp), next_pos) == -1)
+            error("cannot truncate archive");
+#endif
         memcpy(hdr->method, LZHUFF0_METHOD, METHOD_TYPE_STORAGE);
     }
     hdr->original_size = v_original_size;
@@ -281,9 +286,9 @@ build_temporary_file()
 {
     FILE *afp;
 
-    signal(SIGINT, interrupt);
+    signal(SIGINT, lha_interrupt);
 #ifdef SIGHUP
-    signal(SIGHUP, interrupt);
+    signal(SIGHUP, lha_interrupt);
 #endif
 
     temporary_fd = build_temporary_name();
@@ -319,9 +324,9 @@ build_backup_file()
             fatal_error("Cannot make backup file \"%s\"", archive_name);
         }
         recover_archive_when_interrupt = TRUE;
-        signal(SIGINT, interrupt);
+        signal(SIGINT, lha_interrupt);
 #ifdef SIGHUP
-        signal(SIGHUP, interrupt);
+        signal(SIGHUP, lha_interrupt);
 #endif
     }
 }
@@ -382,10 +387,12 @@ set_archive_file_mode()
         if (stat(".", &stbuf) >= 0)
             archive_file_gid = stbuf.st_gid;
     }
+#ifdef __unix__
     if (archive_file_gid >= 0)
         chown(new_archive_name, getuid(), archive_file_gid);
 
     chmod(new_archive_name, archive_file_mode);
+#endif
 
     if (timestamp_archive && most_recent) {
 #if HAVE_UTIMES

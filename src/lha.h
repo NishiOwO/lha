@@ -15,7 +15,7 @@
 #include <errno.h>
 #include <ctype.h>
 #include <sys/types.h>
-#include <sys/file.h>
+//#include <sys/file.h>
 #include <sys/stat.h>
 #include <signal.h>
 
@@ -40,6 +40,7 @@
 
 #ifndef _WIN32
 #include <unistd.h>
+#include <fcntl.h>
 #endif
 
 #include <stdarg.h>
@@ -49,8 +50,10 @@
 # include <pwd.h>
 # include <grp.h>
 #else
+#ifndef __WATCOMC__
 typedef int uid_t;
 typedef int gid_t;
+#endif
 #endif
 
 #if !HAVE_UINT64_T
@@ -62,10 +65,6 @@ typedef int gid_t;
 # else
 #  undef HAVE_UINT64_T
 # endif
-#endif
-
-#if !HAVE_SSIZE_T
-typedef long ssize_t;
 #endif
 
 #include <time.h>

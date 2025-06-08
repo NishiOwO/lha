@@ -480,11 +480,7 @@ generic_to_unix_stamp(t)
     tm.tm_year = subbits(t, 25, 7) + 80;
     tm.tm_isdst = -1;
 
-#if HAVE_MKTIME
     return mktime(&tm);
-#else
-    return timelocal(&tm);
-#endif
 }
 
 static long
@@ -1563,12 +1559,14 @@ init_header(name, v_stat, hdr)
     }
 
 #ifdef S_IFLNK
+#ifndef __WATCOMC__
     if (is_symlink(v_stat)) {
         memcpy(hdr->method, LZHDIRS_METHOD, METHOD_TYPE_STORAGE);
         hdr->attribute = GENERIC_DIRECTORY_ATTRIBUTE;
         hdr->original_size = 0;
         readlink(name, hdr->realname, sizeof(hdr->realname));
     }
+#endif
 #endif
 }
 

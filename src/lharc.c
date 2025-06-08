@@ -858,7 +858,7 @@ cleanup()
 }
 
 RETSIGTYPE
-interrupt(signo)
+lha_interrupt(signo)
     int signo;
 {
     message("Interrupted");
@@ -869,7 +869,9 @@ interrupt(signo)
 #ifdef SIGHUP
     signal(SIGHUP, SIG_DFL);
 #endif
+#ifdef __unix__
     kill(getpid(), signo);
+#endif
 }
 
 /* ------------------------------------------------------------------------ */
@@ -877,12 +879,12 @@ interrupt(signo)
 /* ------------------------------------------------------------------------ */
 static int
 sort_by_ascii(a, b)
-    char          **a, **b;
+    const void    *a, *b;
 {
     register char  *p, *q;
     register int    c1, c2;
 
-    p = *a, q = *b;
+    p = *(char**)a, q = *(char**)b;
     if (generic_format) {
         do {
             c1 = *(unsigned char *) p++;
@@ -1265,7 +1267,11 @@ build_temporary_name()
     {
         int flags;
 
+#ifdef __WATCOMC__
+        _mktemp(temporary_name);
+#else
         mktemp(temporary_name);
+#endif
         flags = O_CREAT|O_EXCL|O_RDWR;
 #ifdef O_BINARY
         flags |= O_BINARY;
