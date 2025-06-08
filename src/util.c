@@ -109,23 +109,19 @@ archive_is_msdos_sfx1(name)
     int len = strlen(name);
 
     if (len >= 4) {
-        if (strcasecmp(".COM", name + len - 4) == 0 ||
-            strcasecmp(".EXE", name + len - 4) == 0)
+        if (lha_strcasecmp(".COM", name + len - 4) == 0 ||
+            lha_strcasecmp(".EXE", name + len - 4) == 0)
             return 1;
     }
 
-    if (len >= 2 && strcasecmp(".x", name + len - 2) == 0)
+    if (len >= 2 && lha_strcasecmp(".x", name + len - 2) == 0)
         return 1;
 
     return 0;
 }
 
-/*
- * strdup(3)
- */
-#ifndef HAVE_STRDUP
 char *
-strdup(buf)
+lha_strdup(buf)
     const char *buf;
 {
     char *p;
@@ -135,40 +131,11 @@ strdup(buf)
     strcpy(p, buf);             /* ok */
     return p;
 }
-#endif
-
-/*
- * memmove( char *dst , char *src , size_t cnt )
- */
-#ifndef HAVE_MEMMOVE
-void *
-memmove(dst, src, cnt)
-    register char *dst, *src;
-    register int cnt;
-{
-    if (dst == src)
-        return dst;
-    if (src > dst) {
-        while (--cnt >= 0)
-            *dst++ = *src++;
-    }
-    else {
-        dst += cnt;
-        src += cnt;
-        while (--cnt >= 0)
-            *--dst = *--src;
-    }
-    return dst;
-}
-#endif
-
-#ifndef HAVE_STRCASECMP
-/* public domain rewrite of strcasecmp(3) */
 
 #include <ctype.h>
 
 int
-strcasecmp(p1, p2)
+lha_strcasecmp(p1, p2)
     const char *p1, *p2;
 {
     while (*p1 && *p2) {
@@ -179,23 +146,6 @@ strcasecmp(p1, p2)
     }
     return strlen(p1) - strlen(p2);
 }
-#endif
-
-#ifndef HAVE_MEMSET
-/* Public Domain memset(3) */
-char *
-memset(s, c, n)
-    char *s;
-    int c;
-    size_t n;
-{
-    char *p = s;
-
-    while (n--)
-        *p++ = (char) c;
-    return s;
-}
-#endif
 
 int
 #if STDC_HEADERS
@@ -231,7 +181,7 @@ char *
 xstrchr(const char *s, int c)
 {
     if (c == 0)
-        return s + strlen(s);
+        return (char*)s + strlen(s);
 
     while (*s) {
         if ((unsigned char)*s == (unsigned char)c)
@@ -287,9 +237,8 @@ xmemrchr(const char *s, int c, size_t n)
 }
 #endif
 
-#ifndef HAVE_BASENAME
 char *
-basename(char *s)
+lha_basename(char *s)
 {
     int len;
     char *t;
@@ -311,7 +260,6 @@ basename(char *s)
         return s;
 
 }
-#endif
 
 /* This function is similar to strncpy() but `dst' is always
    terminated by '\0'. Return the copied string length. */

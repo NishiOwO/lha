@@ -13,11 +13,7 @@
 #include <sys/param.h>
 #endif
 
-#if STDC_HEADERS
 #include <stdlib.h>
-#else
-extern char *malloc ();
-#endif
 
 /* ------------------------------------------------------------------------ */
 unsigned short left[2 * NC - 1], right[2 * NC - 1];

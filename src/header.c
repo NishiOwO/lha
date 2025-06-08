@@ -1672,21 +1672,21 @@ write_header_level1(data, hdr, pathname)
     char *data, *pathname;
 {
     int name_length, dir_length, limit;
-    char *basename, *dirname;
+    char *lha_basename, *dirname;
     size_t header_size;
     char *extend_header_top;
     size_t extend_header_size;
 
-    basename = strrchr(pathname, LHA_PATHSEP);
-    if (basename) {
-        basename++;
-        name_length = strlen(basename);
+    lha_basename = strrchr(pathname, LHA_PATHSEP);
+    if (lha_basename) {
+        lha_basename++;
+        name_length = strlen(lha_basename);
         dirname = pathname;
-        dir_length = basename - dirname;
+        dir_length = lha_basename - dirname;
     }
     else {
-        basename = pathname;
-        name_length = strlen(basename);
+        lha_basename = pathname;
+        name_length = strlen(lha_basename);
         dirname = "";
         dir_length = 0;
     }
@@ -1703,14 +1703,14 @@ write_header_level1(data, hdr, pathname)
     put_byte(0x20);
     put_byte(hdr->header_level); /* level 1 */
 
-    /* level 1 header: write filename (basename only) */
+    /* level 1 header: write filename (lha_basename only) */
     limit = 255 - I_LEVEL1_HEADER_SIZE + 2;
     if (name_length > limit) {
         put_byte(0);            /* name length */
     }
     else {
         put_byte(name_length);
-        put_bytes(basename, name_length);
+        put_bytes(lha_basename, name_length);
     }
 
     put_word(hdr->crc);
@@ -1730,7 +1730,7 @@ write_header_level1(data, hdr, pathname)
     if (name_length > limit) {
         put_word(name_length + 3); /* size */
         put_byte(0x01);         /* filename */
-        put_bytes(basename, name_length);
+        put_bytes(lha_basename, name_length);
     }
 
     if (dir_length > 0) {
@@ -1764,22 +1764,22 @@ write_header_level2(data, hdr, pathname)
     char *data, *pathname;
 {
     int name_length, dir_length;
-    char *basename, *dirname;
+    char *lha_basename, *dirname;
     size_t header_size;
     char *extend_header_top;
     char *headercrc_ptr;
     unsigned int hcrc;
 
-    basename = strrchr(pathname, LHA_PATHSEP);
-    if (basename) {
-        basename++;
-        name_length = strlen(basename);
+    lha_basename = strrchr(pathname, LHA_PATHSEP);
+    if (lha_basename) {
+        lha_basename++;
+        name_length = strlen(lha_basename);
         dirname = pathname;
-        dir_length = basename - dirname;
+        dir_length = lha_basename - dirname;
     }
     else {
-        basename = pathname;
-        name_length = strlen(basename);
+        lha_basename = pathname;
+        name_length = strlen(lha_basename);
         dirname = "";
         dir_length = 0;
     }
@@ -1816,7 +1816,7 @@ write_header_level2(data, hdr, pathname)
     /* must have this header, even if the name_length is 0. */
     put_word(name_length + 3);  /* size */
     put_byte(0x01);             /* filename */
-    put_bytes(basename, name_length);
+    put_bytes(lha_basename, name_length);
 
     if (dir_length > 0) {
         put_word(dir_length + 3); /* size */

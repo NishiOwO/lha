@@ -1412,7 +1412,7 @@ open_old_archive()
 
             if (*ext == 0) continue;
 
-            if (strcasecmp(ext, ext2)) {
+            if (lha_strcasecmp(ext, ext2)) {
                 /* Try to open file just specified filename
                    with usual suffixes.
                    Return NULL if the file is not exist. */

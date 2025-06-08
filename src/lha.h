@@ -11,10 +11,6 @@
         lharc.h     interface.h     slidehuf.h
 */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
-
 #include <stdio.h>
 #include <errno.h>
 #include <ctype.h>
@@ -23,65 +19,37 @@
 #include <sys/stat.h>
 #include <signal.h>
 
-#if HAVE_INTTYPES_H
-# include <inttypes.h>
-#else
-# if HAVE_STDINT_H
-#  include <stdint.h>
-# endif
-#endif
+#include <stdint.h>
 
-#if STDC_HEADERS
-# include <string.h>
-#else
-# if !HAVE_STRCHR
-#  define strchr index
-#  define strrchr rindex
-# endif
-char *strchr (), *strrchr ();
-# if !HAVE_MEMCPY
-#  define memcmp(s1, s2, n) bcmp ((s1), (s2), (n))
-#  define memcpy(d, s, n) bcopy ((s), (d), (n))
-#  define memmove(d, s, n) bcopy ((s), (d), (n))
-# endif
-#endif
+#include <string.h>
 
-#if STDC_HEADERS
-# include <stdlib.h>
-# include <stddef.h>
-#else
-# if HAVE_STDLIB_H
-#  include <stdlib.h>
-# endif
-#endif
+#include <stdlib.h>
+#include <stddef.h>
+
+#define STDC_HEADERS 1
+#define DEFAULT_LZHUFF_METHOD LZHUFF5_METHOD_NUM
+#define ADDITIONAL_SUFFIXES
+#define PACKAGE_NAME "LHa cross-platform"
+#define PACKAGE_VERSION "1.14i-ac20220213"
+#define PLATFORM "cross"
+#define LHA_CONFIGURE_OPTIONS ""
 
 #ifndef NULL
 #define NULL ((char *)0)
 #endif
 
-#if HAVE_UNISTD_H
+#ifndef _WIN32
 #include <unistd.h>
 #endif
 
-#if STDC_HEADERS
-# include <stdarg.h>
-# define va_init(a,b) va_start(a,b)
-#else
-# include <varargs.h>
-# define va_init(a,b) va_start(a)
-#endif
+#include <stdarg.h>
+#define va_init(a,b) va_start(a,b)
 
-#if HAVE_PWD_H
+#ifdef __unix__
 # include <pwd.h>
-#endif
-#if HAVE_GRP_H
 # include <grp.h>
-#endif
-
-#if !HAVE_UID_T
+#else
 typedef int uid_t;
-#endif
-#if !HAVE_GID_T
 typedef int gid_t;
 #endif
 
@@ -100,16 +68,7 @@ typedef int gid_t;
 typedef long ssize_t;
 #endif
 
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
+#include <time.h>
 
 #if HAVE_UTIME_H
 #include <utime.h>
@@ -121,7 +80,7 @@ struct utimbuf {
 int utime(const char *, struct utimbuf *);
 #endif
 
-#if HAVE_DIRENT_H
+#ifndef _WIN32
 # include <dirent.h>
 # define NAMLEN(dirent) strlen((dirent)->d_name)
 #else

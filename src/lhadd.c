@@ -83,15 +83,8 @@ add_one(fp, nafp, hdr)
                       &v_original_size, &v_packed_size);
         fflush(nafp);
         next_pos = ftello(nafp);
-#if HAVE_FTRUNCATE
         if (ftruncate(fileno(nafp), next_pos) == -1)
             error("cannot truncate archive");
-#elif HAVE_CHSIZE
-        if (chsize(fileno(nafp), next_pos) == -1)
-            error("cannot truncate archive");
-#else
-        CAUSE COMPILE ERROR
-#endif
         memcpy(hdr->method, LZHUFF0_METHOD, METHOD_TYPE_STORAGE);
     }
     hdr->original_size = v_original_size;
@@ -557,7 +550,7 @@ cmd_add()
 
         /* exclude files specified by -x option */
         for (j = 0; exclude_files && exclude_files[j]; j++) {
-            if (fnmatch(exclude_files[j], basename(cmd_filev[i]),
+            if (fnmatch(exclude_files[j], lha_basename(cmd_filev[i]),
                         FNM_PATHNAME|FNM_NOESCAPE|FNM_PERIOD) == 0)
                 goto next;
         }

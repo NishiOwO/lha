@@ -363,7 +363,7 @@ extract_one(afp, hdr)
             /* "Icon\r" should be a resource fork file encoded in MacBinary
                format, so that it should be skipped. */
             if (hdr->extend_type == EXTEND_MACOS
-                && strcmp(basename(name), "Icon\r") == 0
+                && strcmp(lha_basename(name), "Icon\r") == 0
                 && decode_macbinary_contents) {
                 return read_size;
             }
@@ -428,7 +428,7 @@ extract_one(afp, hdr)
             /* "Icon\r" should be a resource fork of parent folder's icon,
                so that it can be skipped when system is not Mac OS X. */
             if (hdr->extend_type == EXTEND_MACOS
-                && strcmp(basename(name), "Icon\r") == 0
+                && strcmp(lha_basename(name), "Icon\r") == 0
                 && decode_macbinary_contents) {
                 make_parent_path(name); /* create directory only */
                 return read_size;
@@ -475,7 +475,7 @@ extract_one(afp, hdr)
 #ifdef __APPLE__
                     /* TODO: set resource fork */
                     /* after processing, "Icon\r" is not needed. */
-                    if (strcmp(basename(name), "Icon\r") == 0) {
+                    if (strcmp(lha_basename(name), "Icon\r") == 0) {
                         unlink(name);
                     }
 #endif /* __APPLE__ */
