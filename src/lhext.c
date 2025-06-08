@@ -205,7 +205,7 @@ symlink_with_make_path(realname, name)
 {
     int l_code;
 
-#ifndef __WATCOMC__
+#ifdef __unix__
     l_code = symlink(realname, name);
     if (l_code < 0) {
         make_parent_path(name);

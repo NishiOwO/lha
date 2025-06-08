@@ -40,6 +40,9 @@
 
 #ifndef _WIN32
 #include <unistd.h>
+#endif
+
+#if defined(__WATCOMC__) || defined(__MINGW32__) || defined(__unix__)
 #include <fcntl.h>
 #endif
 
@@ -79,7 +82,7 @@ struct utimbuf {
 int utime(const char *, struct utimbuf *);
 #endif
 
-#ifndef _WIN32
+#if !defined(_WIN32) || defined(__MINGW32__)
 # include <dirent.h>
 # define NAMLEN(dirent) strlen((dirent)->d_name)
 #else

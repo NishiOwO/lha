@@ -231,6 +231,7 @@ has_argument_long(char *arg, struct option *longopts)
             assert(0);
         }
     }
+    return -1;
 }
 
 /*
@@ -267,6 +268,7 @@ has_argument(char *arg,
     default:
         assert(0);
     }
+    return -1;
 }
 
 int
