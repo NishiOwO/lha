@@ -123,9 +123,7 @@ int fnmatch(const char *pattern, const char *string, int flags);
 #define SEEK_END        2
 #endif  /* SEEK_SET */
 
-#if HAVE_LIMITS_H
 #include <limits.h>
-#else
 
 #ifndef CHAR_BIT
 #define CHAR_BIT 8
@@ -158,8 +156,6 @@ int fnmatch(const char *pattern, const char *string, int flags);
 #ifndef LONG_MIN
 #define LONG_MIN (LONG_MAX-ULONG_MAX)
 #endif
-
-#endif /* HAVE_LIMITS_H */
 
 #if !HAVE_FSEEKO
 # define fseeko  fseek
